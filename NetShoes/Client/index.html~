@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>       
+        <head>
+            <title>Ajax Demo</title>        		 
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />                               
+            <script src="js/jquery-1.11.0.min.js"></script>                                                       
+            <script type="text/javascript" charset="utf-8" src="js/ajaxFunctions.js"></script>
+	    <script>
+		 var ajaxSrv = new AJAXServer();
+
+		  $(document).ready(myAddressesLoad());
+
+	         function searchButtonClick(){
+		    var msgDiv = $("#msg");
+		    var editor = $("#editor");
+	            var cep = $(editor).find("#inputCep").val();
+
+		    msgDiv.empty();
+
+                    ajaxSrv.findAddressByCep(cep, function(data){
+			
+                        if (data.err==null) {
+			    //editor.find("#id").val("");
+			    editor.find("#rua").val(data.rua);
+			    editor.find("#numero").val(data.numero);
+			    editor.find("#cidade").val(data.cidade);
+			    editor.find("#estado").val(data.estado);
+			    editor.find("#inputCep").val(data.cep);
+			} else {
+		            msgDiv.append(data.err);
+                        }
+		    }, function(err){
+			msgDiv.append(err);
+		    });
+		 }
+
+	         function inserirButtonClick(){
+		    var msgDiv = $("#msg");
+		    var editor = $("#editor");
+	            var cep    = editor.find("#inputCep").val();
+		    var rua    = editor.find("#rua").val();
+		    var num    = editor.find("#numero").val();
+		    var cidade = editor.find("#cidade").val();
+		    var estado = editor.find("#estado").val();
+		    
+                    msgDiv.empty();
+
+                    ajaxSrv.saveAddress(cep, rua, num, cidade, estado,
+					function(data){
+			
+			msgDiv.append(data.message);
+
+			if (!data.error)
+  			    myAddressesLoad();
+
+		    }, function(err){
+			msgDiv.append(err);
+		    });					   
+
+		}
+
+		function alterarButtonClick(){
+		    var msgDiv = $("#msg");
+		    var editor = $("#editor");
+		    var id     = editor.find("#id").val();
+	            var cep    = editor.find("#inputCep").val();
+		    var rua    = editor.find("#rua").val();
+		    var num    = editor.find("#numero").val();
+		    var cidade = editor.find("#cidade").val();
+		    var estado = editor.find("#estado").val();
+		    
+                    msgDiv.empty();
+
+                    ajaxSrv.updateAddress(id, cep, rua, num, cidade, estado,
+					function(data){
+			
+			msgDiv.append(data.message);
+			myAddressesLoad();
+
+		    }, function(err){
+			msgDiv.append(err);
+		    });			}
+
+		function deleteButtonClick(){
+		    var msgDiv = $("#msg");
+		    var editor = $("#editor");
+
+                    msgDiv.empty();
+
+		    var id = editor.find("#id").val();
+			id = parseInt(id);
+
+                    ajaxSrv.deleteAddress(id, function(data){
+			
+			msgDiv.append(data.message);
+			myAddressesLoad();
+
+		    }, function(err){
+			msgDiv.append(err);
+		    });
+		}
+
+		function selectButtonClick(id){
+		    var selectedDiv = $("#div"+id);
+		    var editor      = $("#editor");
+
+	            var cep    = selectedDiv.find("#cep").val();
+		    var rua    = selectedDiv.find("#rua").val();
+		    var num    = selectedDiv.find("#numero").val();
+		    var cidade = selectedDiv.find("#cidade").val();
+		    var estado = selectedDiv.find("#estado").val();
+
+		    editor.find("#id").val(id);
+		    editor.find("#rua").val(rua);
+		    editor.find("#numero").val(num);
+		    editor.find("#cidade").val(cidade);
+		    editor.find("#estado").val(estado);
+		    editor.find("#inputCep").val(cep);
+
+		}
+
+		function myAddressesLoad(){
+		      var msgDiv = $("#msg");			  
+
+	              ajaxSrv.findMyAddresses(function(data){
+			var addressesDiv = $("#myAddresses");
+			    addressesDiv.empty();
+	
+  		       cleanEditor();
+
+		       for (var i=0; i<data.length; i++){
+  		         var address = data[i]; 
+			 var addressDiv = $("<div>", {id:"div"+address.id, "style":"border:1px solid black;"}).appendTo(addressesDiv);
+				  		       
+			$(addressDiv).append($("<input>",{"id":"id"   ,"readonly":"true","style":"width:5%;","value":address.id}))
+				     .append($("<input>",{"id":"rua"   ,"readonly":"true","style":"width:40%;","value":address.rua}))
+				     .append($("<input>",{"id":"numero","readonly":"true","style":"width:100px","value":address.numero}))
+				     .append($("<input>",{"id":"cidade","readonly":"true","value":address.cidade}))
+				     .append($("<input>",{"id":"estado","readonly":"true","style":"width:20px","value":address.estado}))
+				     .append($("<input>",{"id":"cep"   ,"readonly":"true","style":"width:80px","value":address.cep}));
+
+			var selAddressBtn = $("<input>", {type:"button", 
+							 value:"select", 
+						       onclick:"selectButtonClick('"+address.id+"')"}).appendTo(addressDiv);
+		       }
+
+		    }, function(err){
+			 msgDiv.empty();
+			 msgDiv.append(err);
+		    });			
+		}
+
+
+	         function cleanEditor(){
+		    var editor = $("#editor");
+	                editor.find("input[type='text']").val("");
+		}		
+	    </script>
+        </head>
+        <body>
+	    <br>
+	    <div id="msg"></div>	    
+	    <br>
+	    <div id="editor">
+		    Id:<br>
+		    <input type="text" id="id" readonly/><br>
+		    Cep:<br>
+		    <input type="text" id="inputCep"/>
+		    <input type="button" id="searchButton" onclick="searchButtonClick()" value="find Cep"/><br>
+		    Rua:<br>
+		    <input type="text" id="rua"/><br>
+		    Numero:<br>
+		    <input type="text" id="numero"/><br>
+		    Cidade:<br>
+		    <input type="text" id="cidade"/><br>
+		    Estado:<br>
+		    <input type="text" id="estado"/><br><br>	   
+		    <input type="button" id="cleanButton" onclick="cleanEditor()" value="Clean"/><br><br>
+		    <input type="button" id="inserirButton" onclick="inserirButtonClick()" value="Inserir"/>
+		    <input type="button" id="alterarButton" onclick="alterarButtonClick()" value="Alterar"/>
+		    <input type="button" id="deleteButton" onclick="deleteButtonClick()" value="Deletar"/><br>
+	    </div>
+	    <br><br>
+	    My Adrresses:
+	    <div id="myAddresses">
+	    </div>           
+        </body>        
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-Apr-2015 11:39:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.netshoes.model.vo.Cidade" table="cidade" schema="public" optimistic-lock="version">
+        <id name="cidadeCodigo" type="int">
+            <column name="cidade_codigo" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="uf" class="com.netshoes.model.vo.Uf" fetch="select" lazy="false">
+            <column name="uf_codigo" not-null="true" />
+        </many-to-one>
+        <property name="cidadeDescricao" type="string">
+            <column name="cidade_descricao" length="72" not-null="true" />
+        </property>
+        <property name="cidadeCep" type="string">
+            <column name="cidade_cep" length="8" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

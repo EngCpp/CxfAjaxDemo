@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="DW" match-schema="public"/>
+  <table-filter match-name="usersgameprofile"/>
+  <table-filter match-name="usersprofile"/>
+  <table-filter match-name="games"/>
+  <table-filter match-name="items"/>
+  <table-filter match-name="usersitems"/>
+</hibernate-reverse-engineering>

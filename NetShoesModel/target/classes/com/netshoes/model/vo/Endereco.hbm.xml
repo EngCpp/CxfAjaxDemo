@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-Apr-2015 11:39:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.netshoes.model.vo.Endereco" table="endereco" schema="public" optimistic-lock="version">
+        <id name="enderecoCodigo" type="int">
+            <column name="endereco_codigo" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="bairro" class="com.netshoes.model.vo.Bairro" fetch="select" lazy="false">
+            <column name="bairro_codigo" not-null="true" />
+        </many-to-one>
+        <property name="enderecoCep" type="string">
+            <column name="endereco_cep" length="8" />
+        </property>
+        <property name="enderecoLogradouro" type="string">
+            <column name="endereco_logradouro" length="72" />
+        </property>
+        <property name="enderecoComplemento" type="string">
+            <column name="endereco_complemento" length="72" />
+        </property>
+    </class>
+</hibernate-mapping>

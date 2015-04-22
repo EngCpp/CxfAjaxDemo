@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-Apr-2015 11:39:20 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.netshoes.model.vo.Uf" table="uf" schema="public" optimistic-lock="version">
+        <id name="ufCodigo" type="int">
+            <column name="uf_codigo" />
+            <generator class="assigned" />
+        </id>
+        <property name="ufSigla" type="string">
+            <column name="uf_sigla" length="2" not-null="true" />
+        </property>
+        <property name="ufDescricao" type="string">
+            <column name="uf_descricao" length="72" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

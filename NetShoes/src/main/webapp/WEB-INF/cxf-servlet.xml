@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:jaxws="http://cxf.apache.org/jaxws"
+      xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+      					  http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+      					  http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+
+
+  <import resource="classpath:META-INF/cxf/cxf.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
+  <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+  <jaxws:endpoint id="sws"
+         implementor="com.netshoes.service.NetShoes" 
+             address="/sws"/>
+  
+  <jaxrs:server id="rws"       
+           address="/rws">      
+    	<jaxrs:serviceBeans>
+            <bean class="com.netshoes.service.NetShoes"/>
+        </jaxrs:serviceBeans>
+       <jaxrs:extensionMappings>
+            <entry key="json" value="application/json" />
+            <!--entry key="xml" value="application/xml" /-->
+       </jaxrs:extensionMappings>
+       <jaxrs:providers>
+           <ref bean="jacksonProvider"/>
+           <ref bean="cors-filter" />
+       </jaxrs:providers>             
+  </jaxrs:server>
+
+    <bean id="jacksonProvider" class="org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider" />
+    <!--bean id="cors-server" scope="prototype" class="org.apache.cxf.systest.jaxrs.cors.AnnotatedCorsServer" /--> 
+    <!--bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+            <property name="convertTypesToStrings" value="true" />
+    </bean-->
+    <bean id="cors-filter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>  
+ 
+</beans>
